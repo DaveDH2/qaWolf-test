@@ -1,0 +1,14 @@
+# Node dependencies
+node_modules/
+
+# Playwright test results & reports
+playwright-report/
+test-results/
+
+# Logs & OS files
+*.log
+.DS_Store
+
+# Optional: ignore screenshots/videos if you generate them
+screenshots/
+videos/

@@ -1,5 +1,7 @@
-// playwright.config.js
 import { defineConfig, devices } from '@playwright/test';
+
+const baseURL = process.env.BASE_URL || 'https://news.ycombinator.com';
+ 
 
 export default defineConfig({
   testDir: './tests',
@@ -12,6 +14,7 @@ export default defineConfig({
   use: {
     headless: false,
     trace: 'on-first-retry',
+    baseURL,
   },
 
   projects: [

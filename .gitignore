@@ -1,4 +1,3 @@
-# Node dependencies
 node_modules/
 
 # Playwright test results & reports
@@ -9,7 +8,17 @@ test-results/
 *.log
 .DS_Store
 .cache
+logs/
+*.log
 
-# Optional: ignore screenshots/videos if you generate them
 screenshots/
 videos/
+
+# Husky
+.husky/_/
+
+# Generated chunk specks
+tests/hackerNewsChunks/chunk-*.spec.js
+
+# Prettier / Lint staged cache 
+.prettiercache

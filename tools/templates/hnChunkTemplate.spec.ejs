@@ -11,7 +11,7 @@ test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= gl
   });
 
   for (let i = 0; i < <%= chunkId %>; i++) {
-    await test.step(\`Click 'More' button (\${i + 1})\`, async () => {
+    await test.step('Click "More" button ' + (i + 1), async () => {
       const moreLink = await HNPage.waitForPaginationReady();
       await moreLink.click();
       await page.waitForLoadState('networkidle');

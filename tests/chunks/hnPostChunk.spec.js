@@ -7,49 +7,52 @@ const TOTAL_POST = 100;
 const CHUNK_SIZE = 30;
 const MAX_WORKERS = 4;
 
-
-// generateChunksWithPage(100, 30, 4)
-//
-// [
-//   { page: 1, range: [0, 29] },
-//   { page: 2, range: [30, 59] },
-//   { page: 3, range: [60, 89] },
-//   { page: 4, range: [90, 99] }
-// ]
-
 const CHUNKS = generateChunks(TOTAL_POST, CHUNK_SIZE, MAX_WORKERS);
 
 test.describe.parallel('Hacker News Chunk', () => {
   CHUNKS.forEach(({ page: pageIndex, range: [globalStart, globalEnd] }, index) => {
-    test(`Chunk ${index + 1}: page: ${pageIndex}, posts ${globalStart}-${globalEnd}`, async ({ page }) => {
+    test(`Chunk ${index + 1}: Page ${pageIndex}, Posts ${globalStart}-${globalEnd}`, async ({ page }) => {
       const HNPage = new HackerNewsPage(page);
-      await HNPage.goto();
 
-      const clicks = index; // index 0 = no click, index 1 = click once,
+      await test.step('Go to Hacker News', async () => {
+        await HNPage.goto();
+      });
+
+      // If this chunk requires clicking 'More' button N times to reach the correct page
+      const clicks = index; // index 0 = no click, index 1 = click once, etc.
       for (let i = 0; i < clicks; i++) {
-        const moreLink = await HNPage.waitForPaginationReady();
-        await moreLink.click();
-        await page.waitForLoadState('networkidle');
+        await test.step(`Click 'More' button (${i + 1})`, async () => {
+          const moreLink = await HNPage.waitForPaginationReady();
+          await moreLink.click();
+          await page.waitForLoadState('networkidle');
+        });
       }
 
-      //expect(posts.length).toBe(end - start + 1);
-      const localStart = 0;
-      const localEnd = Math.min(CHUNK_SIZE - 1, globalEnd - globalStart);
-      const posts = await HNPage.getPostsInRange(localStart, localEnd);
+      const posts = await test.step('Extract posts from page', async () => {
+        const localStart = 0;
+        const localEnd = Math.min(CHUNK_SIZE - 1, globalEnd - globalStart);
+        return await HNPage.getPostsInRange(localStart, localEnd);
+      });
 
-      //expect(posts.length).toBe(localEnd - localStart + 1);
+      await test.step('Validate fields on each post', async () => {
+        for (const post of posts) {
+          expect(post.rank, 'Rank should be defined').toBeDefined();
+          expect(post.timestamp, 'Timestamp should be defined').toBeDefined();
+          expect(post.title, 'Title should be defined').toBeDefined();
+        }
+      });
 
-
-      await writeJson(`posts-${index + 1}.json`, {
-        page,
-        range: [globalStart, globalEnd],
-        posts,
+      await test.step('Save timestamp for final sort validation', async () => {
+        await writeJson(`posts-${index + 1}.json`, {
+          page: pageIndex,
+          range: [globalStart, globalEnd],
+          posts,
+        });
       });
 
       console.log(
-        `Chunk ${index + 1} : Page ${pageIndex} | Range ${globalStart}–${globalEnd} | Fetched: ${posts.length} posts`
+        `✅ Chunk ${index + 1} : Page ${pageIndex} | Range ${globalStart}–${globalEnd} | Fetched: ${posts.length} posts`
       );
-
     });
   });
 });

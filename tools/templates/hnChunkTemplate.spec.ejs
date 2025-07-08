@@ -3,7 +3,9 @@ import { HackerNewsPage } from '../../pages/hackerNewsPage';
 import { writeJson } from '../../lib/cache';
 import { logger } from '../../tools/logger.js';
 
-test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= globalStart %>-<%= globalEnd %>', async ({ page }) => {
+test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= globalStart %>-<%= globalEnd %>', async ({ page, testInfo }) => {
+  logger.info(`Worker: ${testInfo.workerIndex} | Chunk <%= chunkId + 1 %>`);  
+
   const HNPage = new HackerNewsPage(page);
 
   await test.step('Go to Hacker News', async () => {
@@ -26,8 +28,8 @@ test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= gl
 
   await test.step('Validate fields on each post', async () => {
     for (const post of posts) {
-      expect(post.rank, 'Rank should be defined').toBeDefined();
-      expect(post.timestamp, 'Timestamp should be defined').toBeDefined();
+      expect(post.postRank, 'Rank should be defined').toBeDefined();
+      expect(post.time, 'Timestamp should be defined').toBeDefined();
       expect(post.title, 'Title should be defined').toBeDefined();
     }
   });

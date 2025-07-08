@@ -15,7 +15,7 @@ screenshots/
 videos/
 
 # Husky
-.husky/_/
+
 
 # Generated chunk specks
 tests/hackerNewsChunks/chunk-*.spec.js

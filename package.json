@@ -12,14 +12,7 @@
     "test:debug": "playwright test --debug",
     "gen:chunks": "node tools/generateChunkSpecs.js",
     "test:hn": "npx playwright test --grep='(?=.*@HN:newest)(?=.*@orchestrator)'",
-    "inspect": "node --inspect-brk node_modules/.bin/playwright test",
-    "prepare": "husky install"
-  },
-  "lint-staged": {
-    "**/*.{js,ts,json,md}": [
-      "prettier --write",
-      "eslint --fix"
-    ]
+    "inspect": "node --inspect-brk node_modules/.bin/playwright test"
   },
   "_moduleAliases": {
     "@locators": "./locators",
@@ -40,8 +33,6 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.32.0",
     "globals": "^16.3.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.2",
     "prettier": "^3.6.2"
   }
 }

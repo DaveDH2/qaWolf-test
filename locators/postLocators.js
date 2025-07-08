@@ -1,12 +1,12 @@
-import { BaseLocator } from "./baseLocators";
+import { BaseLocators } from "./baseLocators";
 
-export class PostLocators extends BaseLocator {
+export class PostLocators extends BaseLocators {
     static ROW_SELECTOR = 'tr.athing';
 
     static ATTR = {
         ID: 'id',
     }
-    
+
     static XPATH = {
         RANK: './/td[1]//span[contains(@class, "rank")]',
         TITLE_LINK: './/span[contains(@class, "titleline")]/a',

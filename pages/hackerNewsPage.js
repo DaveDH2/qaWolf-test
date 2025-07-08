@@ -1,5 +1,7 @@
+import { expect } from '@playwright/test';
 import { PostLocators, HackerNewsLocators } from '../locators';
 import { PostItem } from '../components/postItem.js';
+import { writeJson, readJson } from '../lib/cache.js';
 
 export class HackerNewsPage {
   constructor(page, path = '/newest') {
@@ -15,8 +17,6 @@ export class HackerNewsPage {
 
   async waitForPaginationReady() {
     const locator = this.page.locator(HackerNewsLocators.PAGINATION.MORE_LINK);
-    console.log('Locator:', locator);
-    debugger; 
     await expect(locator).toBeVisible();
     await expect(locator).toHaveText(HackerNewsLocators.PAGINATION.MORE_TEXT)
     return locator;

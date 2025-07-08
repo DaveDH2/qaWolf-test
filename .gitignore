@@ -8,6 +8,7 @@ test-results/
 # Logs & OS files
 *.log
 .DS_Store
+.cache
 
 # Optional: ignore screenshots/videos if you generate them
 screenshots/

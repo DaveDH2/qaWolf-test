@@ -1,14 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const baseURL = process.env.BASE_URL || 'https://news.ycombinator.com';
- 
+
 
 export default defineConfig({
+  globalSetup: './global-setup.js',
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 4 : undefined,
   reporter: 'html',
 
   use: {

@@ -11,6 +11,7 @@
     "test": "playwright test",
     "test:debug": "playwright test --debug",
     "gen:chunks": "node tools/generateChunkSpecs.js",
+    "test:hn": "npx playwright test --grep='(?=.*@HN:newest)(?=.*@orchestrator)'",
     "inspect": "node --inspect-brk node_modules/.bin/playwright test",
     "prepare": "husky install"
   },

@@ -22,3 +22,6 @@ tests/hackerNewsChunks/chunk-*.spec.js
 
 # Prettier / Lint staged cache 
 .prettiercache
+
+# tmp folder
+.tmp

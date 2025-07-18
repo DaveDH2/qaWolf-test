@@ -1,7 +1,6 @@
 import { expect } from '@playwright/test';
 import { PostLocators, HackerNewsLocators } from '../locators';
 import { PostItem } from '../components/postItem.js';
-import { writeJson, readJson } from '../lib/cache.js';
 
 export class HackerNewsPage {
   constructor(page, path = '/newest') {
@@ -12,7 +11,7 @@ export class HackerNewsPage {
 
   async goto(pathOverride) {
     const path = pathOverride?.trim() || this.path;
-    await this.page.goto(path, { waitUntil: 'networkidle' })
+    await this.page.goto(path)
   }
 
   async waitForPaginationReady() {
@@ -30,7 +29,7 @@ export class HackerNewsPage {
 
   async getPostsInRange(start, end) {
     return Promise.all(
-      Array.from({ length: end - start }).map(async (_, offset) => {
+      Array.from({ length: end - start + 1}).map(async (_, offset) => {
         const i = start + offset;
         return this.getPostAt(i);
       })

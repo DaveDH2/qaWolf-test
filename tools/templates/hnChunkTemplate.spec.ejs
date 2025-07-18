@@ -3,8 +3,9 @@ import { HackerNewsPage } from '../../pages/hackerNewsPage';
 import { writeJson } from '../../lib/cache';
 import { logger } from '../../tools/logger.js';
 
-test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= globalStart %>-<%= globalEnd %>', async ({ page, testInfo }) => {
-  logger.info(`Worker: ${testInfo.workerIndex} | Chunk <%= chunkId + 1 %>`);  
+test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= globalStart %>-<%= globalEnd %>', async ({ page }, testInfo) => {
+  const chunkNumber = <%= chunkId + 1 %>;
+  logger.info(`Worker: ${testInfo.workerIndex} | Chunk ${chunkNumber}`);
 
   const HNPage = new HackerNewsPage(page);
 
@@ -13,16 +14,16 @@ test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= gl
   });
 
   for (let i = 0; i < <%= chunkId %>; i++) {
-    await test.step('Click "More" button ' + (i + 1), async () => {
+    await test.step(`Click "More" button ${i + 1}`, async () => {
       const moreLink = await HNPage.waitForPaginationReady();
       await moreLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     });
   }
 
   const posts = await test.step('Extract posts from page', async () => {
     const localStart = 0;
-    const localEnd = Math.min(<%= chunkSize - 1 %>, <%= globalEnd - globalStart %>);
+    const localEnd = Math.min(<%= chunkSize %> - 1, <%= globalEnd %> - <%= globalStart %>);
     return await HNPage.getPostsInRange(localStart, localEnd);
   });
 
@@ -35,12 +36,12 @@ test('HN Newest - Chunk <%= chunkId + 1 %> : Page <%= pageIndex %>, Posts <%= gl
   });
 
   await test.step('Save timestamp for final sort validation', async () => {
-    await writeJson('posts-<%= chunkId + 1 %>.json', {
+    await writeJson(`posts-${chunkNumber}.json`, {
       page: <%= pageIndex %>,
       range: [<%= globalStart %>, <%= globalEnd %>],
       posts,
     });
   });
 
-  logger.info('Chunk <%= chunkId + 1 %> complete: Page <%= pageIndex %>, Posts <%= globalStart %>–<%= globalEnd %>');
+  logger.info(`Chunk ${chunkNumber} complete: Page <%= pageIndex %>, Posts <%= globalStart %>–<%= globalEnd %>`);
 });

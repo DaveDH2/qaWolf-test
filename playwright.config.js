@@ -4,13 +4,19 @@ const baseURL = process.env.BASE_URL || 'https://news.ycombinator.com';
 
 
 export default defineConfig({
-  globalSetup: './global-setup.js',
+  //globalSetup: './global-setup.js',
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 4 : undefined,
-  reporter: 'html',
+  reporter: process.env.CI
+    ? [
+        ['blob', { outputDir: 'tmp-blob' }]
+      ]
+    : [
+        ['html', { open: 'never' }]
+      ],
 
   use: {
     headless: false,

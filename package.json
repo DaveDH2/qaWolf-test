@@ -11,7 +11,9 @@
     "test": "playwright test",
     "test:debug": "playwright test --debug",
     "gen:chunks": "node tools/generateChunkSpecs.js",
-    "test:hn": "npx playwright test --grep='(?=.*@HN:newest)(?=.*@orchestrator)'",
+    "test:HN:newest": "npx playwright test --grep='(?=.*@HN:newest)' && npx playwright show-report",
+    "test:HN:shard:newest": "TOTAL_SHARDS=${TOTAL_SHARDS:-4}; rm -rf reports && mkdir reports; for i in $(seq 1 $TOTAL_SHARDS); do npx playwright test tests/suites/hackerNews/newest/validateSorting.spec.js --shard=1/4 --workers=1 --reporter=dot,blob --output=tmp-blob & done; wait",
+    "test:shard:reports": "npx playwright merge-reports --reporter=html reports",
     "inspect": "node --inspect-brk node_modules/.bin/playwright test"
   },
   "_moduleAliases": {
